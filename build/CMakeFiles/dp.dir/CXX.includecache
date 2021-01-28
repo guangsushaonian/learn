@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/json_dp/dp/src/dp.h
+iostream
+/home/json_dp/dp/src/iostream
+fstream
+/home/json_dp/dp/src/fstream
+string
+/home/json_dp/dp/src/string
+vector
+/home/json_dp/dp/src/vector
+cmath
+/home/json_dp/dp/src/cmath
+algorithm
+-
+cstring
+-
+
+/home/json_dp/dp/src/main.cc
+dp.h
+/home/json_dp/dp/src/dp.h
+nlohmann/json.hpp
+/home/json_dp/dp/src/nlohmann/json.hpp
+iomanip
+-
+
