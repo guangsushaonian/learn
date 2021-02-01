@@ -1,3 +1,0 @@
-/home/json_dp/dp/build/CMakeFiles/rebuild_cache.dir
-/home/json_dp/dp/build/CMakeFiles/edit_cache.dir
-/home/json_dp/dp/build/CMakeFiles/dp.dir
