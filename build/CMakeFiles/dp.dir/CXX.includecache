@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/json_dp/dp/src/dp.cc
+dp.h
+/home/json_dp/dp/src/dp.h
+
 /home/json_dp/dp/src/dp.h
 iostream
 /home/json_dp/dp/src/iostream
@@ -22,11 +26,21 @@ algorithm
 cstring
 -
 
-/home/json_dp/dp/src/main.cc
-dp.h
-/home/json_dp/dp/src/dp.h
+/home/json_dp/dp/src/handle_geojson.cc
+handle_geojson.h
+/home/json_dp/dp/src/handle_geojson.h
+
+/home/json_dp/dp/src/handle_geojson.h
 nlohmann/json.hpp
 /home/json_dp/dp/src/nlohmann/json.hpp
 iomanip
 -
+dp.h
+/home/json_dp/dp/src/dp.h
+
+/home/json_dp/dp/src/main.cc
+handle_geojson.h
+/home/json_dp/dp/src/handle_geojson.h
+handle_geojson.cc
+/home/json_dp/dp/src/handle_geojson.cc
 

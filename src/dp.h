@@ -1,6 +1,5 @@
-#ifndef DP_H
-#define DP_H
-
+#ifndef _DP
+#define _DP
 
 #include "iostream"
 #include "fstream"
@@ -16,12 +15,11 @@ class Point
 {
 public:
 	int ID;
-	string Name;
 	double x;
 	double y;
 	bool isRemoved = false;
 };
 
-void DP(vector<Point> &Points, int begin, int end, double threshold);
+void douglas_Peucker(vector<Point> &Points, int begin, int end, double threshold);
 
-#endif //DP_H
+#endif

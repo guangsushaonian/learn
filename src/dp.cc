@@ -1,8 +1,6 @@
 #include "dp.h"
 
-
- 
-double PointToLine(Point p1, Point p2, Point p3)
+double pointDistToLine(Point p1, Point p2, Point p3)
 {
 	double dist;
 	double A, B, C;
@@ -19,7 +17,7 @@ double getMaxDist(vector<Point> &Points, int begin, int end)
 	double maxdist;
 	for (int i = begin; i <= end; i++)
 	{
-		dists.push_back(PointToLine(Points[begin], Points[end], Points[i]));
+		dists.push_back(pointDistToLine(Points[begin], Points[end], Points[i]));
 	}
 	auto max = max_element(dists.begin(), dists.end());
 	return *max;
@@ -31,14 +29,14 @@ int getMaxDistIndex(vector<Point> &Points, int begin, int end)
 	int index;
 	for (int i = begin; i <= end; i++)
 	{
-		dists.push_back(PointToLine(Points[begin], Points[end], Points[i]));
+		dists.push_back(pointDistToLine(Points[begin], Points[end], Points[i]));
 	}
 	auto max = max_element(dists.begin(), dists.end());
 	index = Points[begin].ID + distance(dists.begin(),max);
 	return index;
 }
  
-void DP(vector<Point> &Points, int begin, int end, double threshold)
+void douglas_Peucker(vector<Point> &Points, int begin, int end, double threshold)
 {
 	int mid;
 	if (end - begin > 1)
@@ -46,8 +44,8 @@ void DP(vector<Point> &Points, int begin, int end, double threshold)
 		if (getMaxDist(Points, begin, end) > threshold)
 		{
 			mid = getMaxDistIndex(Points, begin, end);
-			DP(Points, begin, mid, threshold);
-			DP(Points, mid, end, threshold);
+			douglas_Peucker(Points, begin, mid, threshold);
+			douglas_Peucker(Points, mid, end, threshold);
 		}
 		else
 		{

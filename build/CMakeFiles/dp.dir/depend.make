@@ -5,5 +5,7 @@ CMakeFiles/dp.dir/src/dp.cc.o: ../src/dp.cc
 CMakeFiles/dp.dir/src/dp.cc.o: ../src/dp.h
 
 CMakeFiles/dp.dir/src/main.cc.o: ../src/dp.h
+CMakeFiles/dp.dir/src/main.cc.o: ../src/handle_geojson.cc
+CMakeFiles/dp.dir/src/main.cc.o: ../src/handle_geojson.h
 CMakeFiles/dp.dir/src/main.cc.o: ../src/main.cc
 
