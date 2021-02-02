@@ -3,12 +3,15 @@
 
 #include "nlohmann/json.hpp"
 #include <iomanip>
-using namespace nlohmann;
 #include "dp.h"
 
-void handle_LineString(json &j,int i);
-void handle_Polygon(json &j,int i);
-void handle_MultiLineString(json &j,int i);
-void handle_MultiPolygon(json &j,int i);
+using namespace nlohmann;
+
+void handleLineString(json &lineString);
+void handlePolygon(json &polygon);
+void handleMultiLineString(json &multiLineString);
+void handleMultiPolygon(json &multiPolygon);
+
+
 
 #endif

@@ -8,10 +8,12 @@ int main(int argc,char *argv[]) {
     {
         std::cout << "please input .geojson file address" << std::endl;
     }
-
+    
     // /home/json_dp/dp/json_file/simple.geojson
-     
-    cout << argv[1] << endl; 
+      
+    std::cout << argv[1] << std::endl;  // Original path
+
+    std::cout << argv[2] << std::endl;  // Destination path
 
     //read .geojson file
     ifstream i_file(argv[1]);
@@ -22,33 +24,39 @@ int main(int argc,char *argv[]) {
       
     int count = 0;   //type numbers 
     count = j["/features"_json_pointer].size();
-  
+     
+
     std::cout << "========================================================" << std::endl;
     std::cout << count << std::endl;
     std::cout << "========================================================" << std::endl;
 
-    for(int i = 0; i < count; i++)
-    {   
-        if(j["/features"_json_pointer][i]["geometry"]["type"] == "LineString")
+    
+    for(auto it = j["/features"_json_pointer].begin(); it != j["/features"_json_pointer].end(); it++)
+    {
+        if((*it)["geometry"]["type"] == "LineString")
         {
-            handle_LineString(j,i);
-        }  
-
-        else if(j["/features"_json_pointer][i]["geometry"]["type"] == "Polygon")
-        {
-            handle_Polygon(j,i);
+            handleLineString(*it);
         }
 
-        else if(j["/features"_json_pointer][i]["geometry"]["type"] == "MultiLineString")
+        else if((*it)["geometry"]["type"] == "Polygon")
         {
-            handle_MultiLineString(j,i);
+            handlePolygon(*it);
         }
 
-        else if(j["/features"_json_pointer][i]["geometry"]["type"] == "MultiPolygon")
+        else if((*it)["geometry"]["type"] == "MultiLineString")
         {
-            handle_MultiPolygon(j,i);
+            handleMultiLineString(*it);
         }
+
+        else if((*it)["geometry"]["type"] == "MultiPolygon")
+        {
+            handleMultiPolygon(*it);
+        }       
+
     }
+
+    std::ofstream o(argv[2]);
+    o << std::setw(4) << j << std::endl;  
 
     return 0;
 

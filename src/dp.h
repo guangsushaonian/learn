@@ -20,6 +20,16 @@ public:
 	bool isRemoved = false;
 };
 
-void douglas_Peucker(vector<Point> &Points, int begin, int end, double threshold);
+typedef struct Line{
+	Point p1;
+	Point p2;
+}Line;
+
+typedef struct {
+    double dist;
+	int index;
+}distAndIndex;
+
+void douglasPeucker(vector<Point> &Points, int begin, int end, double threshold);
 
 #endif

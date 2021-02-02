@@ -10,10 +10,6 @@ add_executable(dp
         src/main.cc
         )
         
-# target_include_directories(dp
-#         PUBLIC
-#         ${PROJECT_SOURCE_DIR}/src       
-#         )
         
 target_link_libraries(dp
         nlohmann_json::nlohmann_json

@@ -1,247 +1,102 @@
 #include "handle_geojson.h"
 
 
-void handle_LineString(json &j,int i)
+void  twoDimensional(json *pointset,bool shape)
 {
-    std::cout << "=================== this is LineString ======================" << std::endl;
-
-    std::vector<double> lat;       //Storage accuracy
-    std::vector<double> lon;       //Storage latitude
+    std::vector<double> lat;       //Storage Latitude
+    std::vector<double> lon;       //Storage Longitude
     std::vector<Point> point_line; //Storage point on LineString
     Point point;                   //class pont
 
     int count_point=0; 
-
-    while(j["/features"_json_pointer][i]["geometry"]["coordinates"][count_point] != nullptr)
-    {        
-        int lat_value = j["/features"_json_pointer][i]["geometry"]["coordinates"][count_point][0];
-        int lon_value = j["/features"_json_pointer][i]["geometry"]["coordinates"][count_point][1];
-
-        point.x = lat_value;
-        point.y = lon_value;
+    for(auto it = (*pointset).begin(); it != (*pointset).end(); it++)
+    {
+        point.x = (*it)[0];
+        point.y = (*it)[1];
         point.ID = count_point;
         point_line.push_back(point);
         ++count_point;
     }
-    
-    --count_point;
+
+    if(shape == true)
+    {
+        --count_point;
+        --count_point;
+    }
+    else{
+        --count_point;
+    }
 
     //start DP
-    douglas_Peucker(point_line, 0, count_point, 5.0);
+    douglasPeucker(point_line, 0, count_point, 5.0);
 
     count_point = 0; 
 
     //clear point on the LineString
-    j["/features"_json_pointer][i]["geometry"]["coordinates"] = nullptr;
+    (*pointset) = nullptr;
 
     //assignment after DP 
-    std::cout << "\n\nLineString threshold=5.0" << std::endl;
-    for (int k = 0; k < point_line.size(); k++)
-    {      
-        if (point_line[k].isRemoved==false)
+    std::cout << "\n\nLineString threshold=5.0" << std::endl;  
+    for(auto it = point_line.begin(); it != point_line.end(); it++)
+    {
+        if((*it).isRemoved == false)
         {
-            j["/features"_json_pointer][i]["geometry"]["coordinates"][count_point][0] = point_line[k].x;
-            j["/features"_json_pointer][i]["geometry"]["coordinates"][count_point][1] = point_line[k].y;
+            (*pointset)[count_point] = {(*it).x,(*it).y};
             ++count_point;
-            //std::cout << point_line[k].x << "," << point_line[k].y << "\n";
         }
     }
-    
-    //deposit (After processing LineString)
-    std::ofstream o("pretty.json");
-    o << std::setw(4) << j << std::endl;
+} 
+
+
+void handleLineString(json &lineString)
+{
+    std::cout << "=================== this is LineString ======================" << std::endl;
+     
+    json *lineStringPoint = &lineString["geometry"]["coordinates"];
+
+    twoDimensional(lineStringPoint,false);  
+
 }
 
-void handle_Polygon(json &j,int i)
+
+void handlePolygon(json &polygon)
 {
     std::cout << "=================== this is Polygon ======================" << std::endl;
 
-    std::vector<double> lat;        //Storage accuracy
-    std::vector<double> lon;        //Storage latitude
-    std::vector<Point> point_line;  //Storage point on LineString
-    Point point;                    //class pont
-
-    int count_point=0;
-    int count_polygon=0;
-
-    count_polygon = j["/features"_json_pointer][i]["geometry"]["coordinates"].size();
-
-    std::cout << count_polygon << std::endl;
-    
-    for(int k = 0; k<count_polygon; k++)
-    {  
-        while(j["/features"_json_pointer][i]["geometry"]["coordinates"][k][count_point] != nullptr)
-        {                
-            int lat_value = j["/features"_json_pointer][i]["geometry"]["coordinates"][k][count_point][0];
-            int lon_value = j["/features"_json_pointer][i]["geometry"]["coordinates"][k][count_point][1];
-
-            point.x = lat_value;
-            point.y = lon_value;
-            point.ID = count_point;
-            point_line.push_back(point);
-            
-            ++count_point;
-        }    
-        
-        --count_point;
-        --count_point;
-
-        std::cout << "-------------------------clear----------------------------" << std::endl;
-        j["/features"_json_pointer][i]["geometry"]["coordinates"][k] = nullptr;
-        
-        //start DP
-        douglas_Peucker(point_line, 0, count_point, 5.0);
-            
-        count_point = 0;
-
-        //assignment after DP 
-        std::cout << "\n\nMultiLineString threshold=5.0" << std::endl;
-        for (int h = 0; h < point_line.size(); h++)
-        {
-            if (point_line[h].isRemoved==false)
-            {
-                j["/features"_json_pointer][i]["geometry"]["coordinates"][k][count_point][0] = point_line[h].x;
-                j["/features"_json_pointer][i]["geometry"]["coordinates"][k][count_point][1] = point_line[h].y;
-                ++count_point;
-            }
-        }
-
-        count_point = 0;
-        point_line.clear();
-
+    json *polygonLine = &polygon["geometry"]["coordinates"];
+     
+    for(auto it = (*polygonLine).begin(); it != (*polygonLine).end(); it++)
+    {        
+        twoDimensional(&(*it),true);
     }
 
-    //deposit (After processing MultiLineString)
-    std::ofstream o("pretty_1.json");
-    o << std::setw(4) << j << std::endl;
 }
 
-void handle_MultiLineString(json &j,int i)
+void handleMultiLineString(json &multiLineString)
 {
     std::cout << "=================== this is MultiLineString ======================" << std::endl;
+     
+    json *polygonLine = &multiLineString["geometry"]["coordinates"];
 
-    std::vector<double> lat;        //Storage accuracy
-    std::vector<double> lon;        //Storage latitude
-    std::vector<Point> point_line;  //Storage point on LineString
-    Point point;                    //class pont
-
-    int count_point=0;
-    int count_line=0;
-
-    count_line = j["/features"_json_pointer][i]["geometry"]["coordinates"].size();
-
-    std::cout << count_line << std::endl;
-    
-    for(int k = 0; k<count_line; k++)
-    {  
-        while(j["/features"_json_pointer][i]["geometry"]["coordinates"][k][count_point] != nullptr)
-        {                
-            int lat_value = j["/features"_json_pointer][i]["geometry"]["coordinates"][k][count_point][0];
-            int lon_value = j["/features"_json_pointer][i]["geometry"]["coordinates"][k][count_point][1];
-
-            point.x = lat_value;
-            point.y = lon_value;
-            point.ID = count_point;
-            point_line.push_back(point);
-            
-            ++count_point;
-        }    
-        count_point--;
-        
-        std::cout << "-------------------------clear----------------------------" << std::endl;
-        j["/features"_json_pointer][i]["geometry"]["coordinates"][k] = nullptr;
-        
-        //start DP
-        douglas_Peucker(point_line, 0, count_point, 5.0);
-            
-        count_point = 0;
-
-        //assignment after DP 
-        std::cout << "\n\nMultiLineString threshold=5.0" << std::endl;
-        for (int h = 0; h < point_line.size(); h++)
-        {
-            if (point_line[h].isRemoved==false)
-            {
-                j["/features"_json_pointer][i]["geometry"]["coordinates"][k][count_point][0] = point_line[h].x;
-                j["/features"_json_pointer][i]["geometry"]["coordinates"][k][count_point][1] = point_line[h].y;
-                ++count_point;
-            }
-        }
-
-        count_point = 0;
-        point_line.clear();
-
+    for(auto it = (*polygonLine).begin(); it != (*polygonLine).end(); it++)
+    {        
+        twoDimensional(&(*it),false);
     }
-
-    //deposit (After processing MultiLineString)
-    std::ofstream o("pretty_2.json");
-    o << std::setw(4) << j << std::endl;
+   
 }
 
-void handle_MultiPolygon(json &j,int i)
+void handleMultiPolygon(json &multiPolygon)
 {
     std::cout << "=================== this is MultiPolygon ======================" << std::endl;
-    std::vector<double> lat;        //Storage accuracy
-    std::vector<double> lon;        //Storage latitude
-    std::vector<Point> point_multiploygon;  //Storage point on LineString
-    Point point;                    //class pont
 
-    int count_point = 0;
-    int count_line = 0;
-    int count_polygon = 0;
-    int count_polygon_nest = 0;
-       
-    count_polygon = j["/features"_json_pointer][i]["geometry"]["coordinates"].size();
+    json *polygon = &multiPolygon["geometry"]["coordinates"];
 
-    for(int k = 0; k < count_polygon; k++)
+    for(auto it = (*polygon).begin(); it != (*polygon).end(); it++)
     {
-        count_polygon_nest = j["/features"_json_pointer][i]["geometry"]["coordinates"][k].size();
-        
-        for(int l = 0; l < count_polygon_nest; l++)
+        for(auto st = (*it).begin(); st != (*it).end(); st++)
         {
-            while(j["/features"_json_pointer][i]["geometry"]["coordinates"][k][l][count_point] != nullptr)
-            {                
-                int lat_value = j["/features"_json_pointer][i]["geometry"]["coordinates"][k][l][count_point][0];
-                int lon_value = j["/features"_json_pointer][i]["geometry"]["coordinates"][k][l][count_point][1];
-
-                point.x = lat_value;
-                point.y = lon_value;
-                point.ID = count_point;
-                point_multiploygon.push_back(point);
-                
-                ++count_point;
-            }    
-            
-            --count_point;
-            --count_point;
-
-            std::cout << "-------------------------clear----------------------------" << std::endl;
-            j["/features"_json_pointer][i]["geometry"]["coordinates"][k][l] = nullptr;
-            
-            //start DP
-            douglas_Peucker(point_multiploygon, 0, count_point, 5.0);
-                
-            count_point = 0;
-
-            //assignment after DP 
-            std::cout << "\n\nMultiLineString threshold=5.0" << std::endl;
-            for (int h = 0; h < point_multiploygon.size(); h++)
-            {
-                if (point_multiploygon[h].isRemoved==false)
-                {
-                    j["/features"_json_pointer][i]["geometry"]["coordinates"][k][l][count_point][0] = point_multiploygon[h].x;
-                    j["/features"_json_pointer][i]["geometry"]["coordinates"][k][l][count_point][1] = point_multiploygon[h].y;
-                    ++count_point;
-                }
-            }
-
-            count_point = 0;
-            point_multiploygon.clear();
+            twoDimensional(&(*st),true);
         }
+    } 
 
-    }
-
-    //deposit (After processing MultiPolygon)
-    std::ofstream o("pretty_3.json");
-    o << std::setw(4) << j << std::endl;
 }
