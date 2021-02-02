@@ -12,7 +12,6 @@ int main(int argc,char *argv[]) {
     // /home/json_dp/dp/json_file/simple.geojson
       
     std::cout << argv[1] << std::endl;  // Original path
-
     std::cout << argv[2] << std::endl;  // Destination path
 
     //read .geojson file
@@ -21,16 +20,7 @@ int main(int argc,char *argv[]) {
     json j;      
     //convert json format
     i_file >> j;
-      
-    int count = 0;   //type numbers 
-    count = j["/features"_json_pointer].size();
-     
-
-    std::cout << "========================================================" << std::endl;
-    std::cout << count << std::endl;
-    std::cout << "========================================================" << std::endl;
-
-    
+        
     for(auto it = j["/features"_json_pointer].begin(); it != j["/features"_json_pointer].end(); it++)
     {
         if((*it)["geometry"]["type"] == "LineString")

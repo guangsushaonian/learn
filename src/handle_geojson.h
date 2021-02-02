@@ -12,6 +12,4 @@ void handlePolygon(json &polygon);
 void handleMultiLineString(json &multiLineString);
 void handleMultiPolygon(json &multiPolygon);
 
-
-
 #endif
