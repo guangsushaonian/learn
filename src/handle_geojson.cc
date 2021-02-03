@@ -6,9 +6,7 @@
    I need this way,to delete duplicate points on "Polygon" and "MultiPolygon".
 */  
 void  dpToPoints(json *pointset,bool shape)
-{
-    std::vector<double> lat;       
-    std::vector<double> lon;       
+{      
     std::vector<Point> points; 
     Point point;                   
 
