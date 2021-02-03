@@ -8,6 +8,8 @@ add_executable(dp
         src/dp.cc
         src/dp.h
         src/main.cc
+        src/handle_geojson.cc
+        src/handle_geojson.h
         )
         
         
