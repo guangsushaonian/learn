@@ -7,7 +7,7 @@
 #include "vector"
 #include "cmath"
 #include <algorithm>
-#include <cstring> 
+#include <cstring>
 
 using namespace std;
 
@@ -18,17 +18,19 @@ public:
     double x;
     double y;
     bool isRemoved = false;
-}Point;
+} Point;
 
-typedef struct Line{
+typedef struct Line
+{
     Point p1;
     Point p2;
-}Line;
+} Line;
 
-typedef struct {
+typedef struct
+{
     double dist;
     int index;
-}DistAndIndex;
+} DistAndIndex;
 
 void douglasPeucker(vector<Point> &Points, int begin, int end, double threshold);
 
