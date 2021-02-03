@@ -12,8 +12,8 @@ double pointDistToLine(Point point, Line line)
 DistAndIndex getMaxDist(vector<Point> &Points, int begin, int end)
 {
 	vector<double> dists;
-	double maxdist;
 	DistAndIndex distIndex;
+	
 	for (int i = begin; i <= end; i++)
 	{
 		Line line;
