@@ -9,11 +9,6 @@ int main(int argc,char *argv[]) {
         std::cout << "please input .geojson file address" << std::endl;
     }
     
-    // /home/json_dp/dp/json_file/simple.geojson
-      
-    std::cout << argv[1] << std::endl;  // Original path
-    std::cout << argv[2] << std::endl;  // Destination path
-
     //read .geojson file
     ifstream i_file(argv[1]);
     // create an array using push_back
@@ -21,32 +16,31 @@ int main(int argc,char *argv[]) {
     //convert json format
     i_file >> j;
         
-    for(auto it = j["/features"_json_pointer].begin(); it != j["/features"_json_pointer].end(); it++)
+    for(auto feature = j["/features"_json_pointer].begin(); feature != j["/features"_json_pointer].end(); feature++)
     {
-        if((*it)["geometry"]["type"] == "LineString")
+        if((*feature)["geometry"]["type"] == "LineString")
         {
-            handleLineString(*it);
+            handleLineString(*feature);
         }
 
-        else if((*it)["geometry"]["type"] == "Polygon")
+        else if((*feature)["geometry"]["type"] == "Polygon")
         {
-            handlePolygon(*it);
+            handlePolygon(*feature);
         }
 
-        else if((*it)["geometry"]["type"] == "MultiLineString")
+        else if((*feature)["geometry"]["type"] == "MultiLineString")
         {
-            handleMultiLineString(*it);
+            handleMultiLineString(*feature);
         }
 
-        else if((*it)["geometry"]["type"] == "MultiPolygon")
+        else if((*feature)["geometry"]["type"] == "MultiPolygon")
         {
-            handleMultiPolygon(*it);
+            handleMultiPolygon(*feature);
         }       
 
     }
-
-    std::ofstream o(argv[2]);
-    o << std::setw(4) << j << std::endl;  
+    
+    std::cout << std::setw(4) << j << std::endl;  
 
     return 0;
 

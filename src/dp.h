@@ -11,24 +11,24 @@
 
 using namespace std;
 
-class Point
+typedef struct Point
 {
 public:
-	int ID;
-	double x;
-	double y;
-	bool isRemoved = false;
-};
+    int id;
+    double x;
+    double y;
+    bool isRemoved = false;
+}Point;
 
 typedef struct Line{
-	Point p1;
-	Point p2;
+    Point p1;
+    Point p2;
 }Line;
 
 typedef struct {
     double dist;
-	int index;
-}distAndIndex;
+    int index;
+}DistAndIndex;
 
 void douglasPeucker(vector<Point> &Points, int begin, int end, double threshold);
 

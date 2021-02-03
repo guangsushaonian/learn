@@ -1,20 +1,23 @@
 #include "handle_geojson.h"
 
-
-void  twoDimensional(json *pointset,bool shape)
+/*  
+   when json's type is "LineString" or "MultiLineString" ,shape is equal to 'false'.
+   when json's is "Polygon" or "MultiPolygon" ,shape is equal to 'true' . 
+   I need this way,to delete duplicate points on "Polygon" and "MultiPolygon".
+*/  
+void  dpToPoints(json *pointset,bool shape)
 {
-    std::vector<double> lat;       //Storage Latitude
-    std::vector<double> lon;       //Storage Longitude
-    std::vector<Point> point_line; //Storage point on LineString
-    Point point;                   //class pont
+    std::vector<double> lat;       
+    std::vector<double> lon;       
+    std::vector<Point> points; 
+    Point point;                   
 
     int count_point=0; 
     for(auto it = (*pointset).begin(); it != (*pointset).end(); it++)
     {
         point.x = (*it)[0];
         point.y = (*it)[1];
-        point.ID = count_point;
-        point_line.push_back(point);
+        points.push_back(point);
         ++count_point;
     }
 
@@ -28,21 +31,19 @@ void  twoDimensional(json *pointset,bool shape)
     }
 
     //start DP
-    douglasPeucker(point_line, 0, count_point, 5.0);
+    douglasPeucker(points, 0, count_point, 5.0);
 
     count_point = 0; 
 
     //clear point on the LineString
-    (*pointset) = nullptr;
+    (*pointset).clear();
 
     //assignment after DP 
-    std::cout << "\n\nLineString threshold=5.0" << std::endl;  
-    for(auto it = point_line.begin(); it != point_line.end(); it++)
+    for(auto it = points.begin(); it != points.end(); it++)
     {
         if((*it).isRemoved == false)
         {
-            (*pointset)[count_point] = {(*it).x,(*it).y};
-            ++count_point;
+            (*pointset).push_back({(*it).x,(*it).y});
         }
     }
 } 
@@ -50,44 +51,40 @@ void  twoDimensional(json *pointset,bool shape)
 
 void handleLineString(json &lineString)
 {
-    std::cout << "=================== this is LineString ======================" << std::endl;
      
     json *lineStringPoint = &lineString["geometry"]["coordinates"];
 
-    twoDimensional(lineStringPoint,false);  
+    dpToPoints(lineStringPoint,false);  
 
 }
 
 
 void handlePolygon(json &polygon)
 {
-    std::cout << "=================== this is Polygon ======================" << std::endl;
 
     json *polygonLine = &polygon["geometry"]["coordinates"];
      
     for(auto it = (*polygonLine).begin(); it != (*polygonLine).end(); it++)
     {        
-        twoDimensional(&(*it),true);
+        dpToPoints(&(*it),true);
     }
 
 }
 
 void handleMultiLineString(json &multiLineString)
 {
-    std::cout << "=================== this is MultiLineString ======================" << std::endl;
      
     json *polygonLine = &multiLineString["geometry"]["coordinates"];
 
     for(auto it = (*polygonLine).begin(); it != (*polygonLine).end(); it++)
     {        
-        twoDimensional(&(*it),false);
+        dpToPoints(&(*it),false);
     }
    
 }
 
 void handleMultiPolygon(json &multiPolygon)
 {
-    std::cout << "=================== this is MultiPolygon ======================" << std::endl;
 
     json *polygon = &multiPolygon["geometry"]["coordinates"];
 
@@ -95,7 +92,7 @@ void handleMultiPolygon(json &multiPolygon)
     {
         for(auto st = (*it).begin(); st != (*it).end(); st++)
         {
-            twoDimensional(&(*st),true);
+            dpToPoints(&(*st),true);
         }
     } 
 
