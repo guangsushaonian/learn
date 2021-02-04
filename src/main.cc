@@ -1,5 +1,5 @@
 #include "handle_geojson.h"
-//#include "handle_geojson.cc"
+
 
 //Pass in the .geojson file to be processed
 int main(int argc, char *argv[])

@@ -36,17 +36,17 @@ void applyDpOnPoints(json *pointset, bool isPolygon)
 void handleLineString(json &lineString)
 {
 
-    json *lineStringPoint = &lineString["geometry"]["coordinates"];
+    json *lineStringPoints = &lineString["geometry"]["coordinates"];
 
-    applyDpOnPoints(lineStringPoint, false);
+    applyDpOnPoints(lineStringPoints, false);
 }
 
 void handlePolygon(json &polygon)
 {
 
-    json *polygonLine = &polygon["geometry"]["coordinates"];
+    json *polygonLines = &polygon["geometry"]["coordinates"];
 
-    for (auto it = (*polygonLine).begin(); it != (*polygonLine).end(); it++)
+    for (auto it = (*polygonLines).begin(); it != (*polygonLines).end(); it++)
     {
         applyDpOnPoints(&(*it), true);
     }
@@ -55,9 +55,9 @@ void handlePolygon(json &polygon)
 void handleMultiLineString(json &multiLineString)
 {
 
-    json *polygonLine = &multiLineString["geometry"]["coordinates"];
+    json *polygonLines = &multiLineString["geometry"]["coordinates"];
 
-    for (auto it = (*polygonLine).begin(); it != (*polygonLine).end(); it++)
+    for (auto it = (*polygonLines).begin(); it != (*polygonLines).end(); it++)
     {
         applyDpOnPoints(&(*it), false);
     }
@@ -66,9 +66,9 @@ void handleMultiLineString(json &multiLineString)
 void handleMultiPolygon(json &multiPolygon)
 {
 
-    json *polygon = &multiPolygon["geometry"]["coordinates"];
+    json *polygons = &multiPolygon["geometry"]["coordinates"];
 
-    for (auto it = (*polygon).begin(); it != (*polygon).end(); it++)
+    for (auto it = (*polygons).begin(); it != (*polygons).end(); it++)
     {
         for (auto st = (*it).begin(); st != (*it).end(); st++)
         {
